@@ -3,6 +3,9 @@
   "scripts": {
     "dev": "vite"
   },
+  "dependencies": {
+    "@devlsh/embed": "workspace:*"
+  },
   "devDependencies": {
     "@vitejs/plugin-vue": "^4.4.1",
     "@vue/compiler-sfc": "^3.3.8",

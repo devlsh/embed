@@ -1,5 +1,5 @@
 {
-  "name": "@evilkiwi/embed",
+  "name": "@devlsh/embed",
   "version": "1.3.0",
   "description": "Vue 3 Utility Hook for cross-origin iFrame IPC",
   "files": [
@@ -14,13 +14,13 @@
     "url": "https://evil.kiwi",
     "email": "support@evil.kiwi"
   },
-  "homepage": "https://github.com/evilkiwi/embed",
+  "homepage": "https://github.com/devlsh/embed",
   "bugs": {
-    "url": "https://github.com/evilkiwi/embed/issues"
+    "url": "https://github.com/devlsh/embed/issues"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/evilkiwi/embed.git"
+    "url": "git+https://github.com/devlsh/embed.git"
   },
   "keywords": [
     "typescript",
@@ -33,11 +33,15 @@
     "prepack": "pnpm run build",
     "build": "pnpm run clean && pnpm run compile",
     "compile": "vite build",
-    "dev": "vite build --watch"
+    "dev": "vite build --watch",
+    "test:package": "node scripts/verify-package.mjs"
   },
   "dependencies": {
-    "@evilkiwi/logger": "^1.1.0",
+    "@devlsh/logger": "^1.1.0",
     "nanoevents": "^8.0.0"
+  },
+  "peerDependencies": {
+    "vue": "^3.3.8"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.1.1",

@@ -9,9 +9,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useEmbed } from '@devlsh/embed';
 import { ref } from 'vue';
-
-import { useEmbed } from '@/../../..';
 
 import { rand } from './helpers';
 

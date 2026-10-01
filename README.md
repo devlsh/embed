@@ -1,15 +1,15 @@
 <div align="center">
-  <a href="https://www.npmjs.com/package/@evilkiwi/embed" target="_blank">
-    <img src="https://img.shields.io/npm/v/@evilkiwi/embed?style=flat-square" alt="NPM" />
+  <a href="https://www.npmjs.com/package/@devlsh/embed" target="_blank">
+    <img src="https://img.shields.io/npm/v/@devlsh/embed?style=flat-square" alt="NPM" />
   </a>
   <a href="https://discord.gg/3S6AKZ2GR9" target="_blank">
     <img src="https://img.shields.io/discord/1000565079789535324?color=7289DA&label=discord&logo=discord&logoColor=FFFFFF&style=flat-square" alt="Discord" />
   </a>
-  <img src="https://img.shields.io/npm/l/@evilkiwi/embed?style=flat-square" alt="GPL-3.0-only" />
+  <img src="https://img.shields.io/npm/l/@devlsh/embed?style=flat-square" alt="GPL-3.0-only" />
   <h3>Embedded iFrame IPC for Vue 3</h3>
 </div>
 
-`@evilkiwi/embed` provides a single Vue 3 hook which can be used to communicate between an iFrame and its parent via `postMessage` IPC.
+`@devlsh/embed` provides a single Vue 3 hook which can be used to communicate between an iFrame and its parent via `postMessage` IPC.
 
 - `sync`/`async` messaging/responses
 - Configurable timeouts
@@ -23,14 +23,14 @@
 
 ## Installation
 
-This package is available via NPM:
+Install Embed with a compatible Vue peer:
 
 ```bash
-yarn add @evilkiwi/embed
+yarn add @devlsh/embed vue@^3.3.8
 
 # or
 
-npm install @evilkiwi/embed
+npm install @devlsh/embed vue@^3.3.8
 ```
 
 ## Usage
@@ -46,10 +46,10 @@ sending the messages.
 </template>
 
 <script lang="ts" setup>
-import { useEmbed } from '@evilkiwi/embed';
+import { useEmbed } from '@devlsh/embed';
 import { onMounted, ref } from 'vue';
 
-const iframe = ref<InstanceType<typeof HTMLIFrame>>();
+const iframe = ref<HTMLIFrameElement>();
 
 const { send, events } = useEmbed('host', {
   id: 'shared-id',
@@ -76,7 +76,7 @@ onMounted(async () => {
 </template>
 
 <script lang="ts" setup>
-import { useEmbed } from '@evilkiwi/embed';
+import { useEmbed } from '@devlsh/embed';
 
 const { handle, post } = useEmbed('client', {
   id: 'shared-id',
@@ -108,19 +108,28 @@ This example shows:
 Since communication is bi-directional, you can use **any of the methods on either Host or Client**. For example, asynchronous operations
 aren't limited to Host -> Client, the Client can also call asynchronous operations and the Host can register handlers/resolvers.
 
-| **Option** | **Default**             | **Type**                               | **Description**                                                                           |
-| ---------- | ----------------------- | -------------------------------------- | ----------------------------------------------------------------------------------------- |
-| `id`       | **[Required]**          | `string`                               | The Host and Client that you want to talk to each other should share the \_same\_ ID.     |
-| `timeout`  | `15000`                 | `number`                               | Configures the global timeout for all asynchronous operations against this ID pair.       |
-| `iframe`   | **[Required for Host]** | `Ref<InstanceType<typeof HTMLIFrame>>` | A Vue 3 `ref` for a Template reference.                                                   |
-| `remote`   | `*`                     | `string`                               | A remote URL to limit who can recieve/process Events over this Host/Client pair.          |
-| `debug`    | `false`                 | `boolean`                              | Whether to print Debug messages to the console, providing an overview of the IPC process. |
+| **Option** | **Default**             | **Type**                              | **Description**                                                                           |
+| ---------- | ----------------------- | ------------------------------------- | ----------------------------------------------------------------------------------------- |
+| `id`       | **[Required]**          | `string`                              | The Host and Client that you want to talk to each other should share the \_same\_ ID.     |
+| `timeout`  | `15000`                 | `number`                              | Configures the global timeout for all asynchronous operations against this ID pair.       |
+| `iframe`   | **[Required for Host]** | `Ref<HTMLIFrameElement \| undefined>` | A Vue 3 `ref` for a Template reference.                                                   |
+| `remote`   | `*`                     | `string`                              | A remote URL to limit who can recieve/process Events over this Host/Client pair.          |
+| `debug`    | `false`                 | `boolean`                             | Whether to print Debug messages to the console, providing an overview of the IPC process. |
 
 ### Security Note
 
 By default, if you don't supply a `remote`, the library will process **all** incoming messages and send events that **any** party can
 recieve. By setting this to a URL (See above example), you can limit this and hugely reduce the impact it has on security.
 
-## To-do
+## Legacy logger compatibility
 
-- Add a test suite
+Embed 1.3.0 intentionally depends on `@devlsh/logger` `^1.1.0`, not Logger 3.x. This is a temporary compatibility choice that preserves the
+public `Context.logger` API, including `useLogger()` and the legacy `group(message, context?, collapsed?, level?, prefix?)` argument order.
+The compatible Logger 1.1.0 release repairs declaration imports without changing its runtime. Vue `^3.3.8` is a peer dependency;
+`nanoevents` remains a runtime and declaration dependency.
+
+The `main` and `module` fields retain the existing CommonJS and ESM entrypoints. CommonJS loading of the legacy ESM logger is checked on
+Node 24.20.0; older Node versions have not been checked.
+
+For package verification, see [Contributing](CONTRIBUTING.md#package-verification). Original Evil Kiwi authorship and the GPL-3.0-only
+license are preserved. The Discord link above remains the existing community link, not a new devlsh community.

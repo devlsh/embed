@@ -8,7 +8,7 @@ importers:
 
   .:
     dependencies:
-      '@evilkiwi/logger':
+      '@devlsh/logger':
         specifier: ^1.1.0
         version: 1.1.0
       nanoevents:
@@ -53,6 +53,10 @@ importers:
         version: 3.3.8(typescript@5.2.2)
 
   example/child:
+    dependencies:
+      '@devlsh/embed':
+        specifier: workspace:*
+        version: link:../..
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^4.4.1
@@ -71,6 +75,10 @@ importers:
         version: 3.3.8(typescript@5.2.2)
 
   example/parent:
+    dependencies:
+      '@devlsh/embed':
+        specifier: workspace:*
+        version: link:../..
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^4.4.1
@@ -289,6 +297,10 @@ packages:
       to-fast-properties: 2.0.0
     dev: true
 
+  /@devlsh/logger@1.1.0:
+    resolution: {integrity: sha512-Z8aXUT6Bk9K/2qMN0Far2BR+WUKdOA+D0BZigAIK1ZVfJBYTt55oBzYf32R5CMNkUBSONORteaZmi8J8IwJ+9w==}
+    dev: false
+
   /@esbuild/android-arm64@0.18.20:
     resolution: {integrity: sha512-Nz4rJcchGDtENV0eMKUNa6L12zz2zBDXuhj/Vjh18zGqB44Bi7MBMSXjgunJgjRhCmKOjnPuZp4Mb6OKqtMHLQ==}
     engines: {node: '>=12'}
@@ -486,10 +498,6 @@ packages:
     requiresBuild: true
     dev: true
     optional: true
-
-  /@evilkiwi/logger@1.1.0:
-    resolution: {integrity: sha512-kYB2MsqILhiO77PpA2uF6T8YU1D/HF8wv+Fyxytf01IARidgJ3NYlgdSC2wi+kSuQYuL4VV71bz/vuuB2NtSCw==}
-    dev: false
 
   /@ianvs/prettier-plugin-sort-imports@4.1.1(@vue/compiler-sfc@3.3.8)(prettier@3.0.3):
     resolution: {integrity: sha512-kJhXq63ngpTQ2dxgf5GasbPJWsJA3LgoOdd7WGhpUSzLgLgI4IsIzYkbJf9kmpOHe7Vdm/o3PcRA3jmizXUuAQ==}

@@ -40,7 +40,7 @@ export default defineConfig({
       name: 'Embed',
     },
     rollupOptions: {
-      external: ['@evilkiwi/logger', 'vue'],
+      external: ['@devlsh/logger', 'vue'],
     },
     emptyOutDir: true,
   },

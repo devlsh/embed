@@ -20,9 +20,8 @@
 </template>
 
 <script lang="ts" setup>
+import { useEmbed } from '@devlsh/embed';
 import { ref } from 'vue';
-
-import { useEmbed } from '@/../../..';
 
 let interval1: number | undefined;
 let interval2: number | undefined;

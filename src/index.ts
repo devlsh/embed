@@ -1,4 +1,4 @@
-import { createLogger } from '@evilkiwi/logger';
+import { createLogger } from '@devlsh/logger';
 import { createNanoEvents, type DefaultEvents } from 'nanoevents';
 import type { WatchStopHandle } from 'vue';
 

@@ -1,4 +1,4 @@
-import type { Logger } from '@evilkiwi/logger';
+import type { Logger } from '@devlsh/logger';
 import type { Emitter, EventsMap } from 'nanoevents';
 import type { Ref } from 'vue';
 
