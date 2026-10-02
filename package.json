@@ -33,8 +33,7 @@
     "prepack": "pnpm run build",
     "build": "pnpm run clean && pnpm run compile",
     "compile": "vite build",
-    "dev": "vite build --watch",
-    "test:package": "node scripts/verify-package.mjs"
+    "dev": "vite build --watch"
   },
   "dependencies": {
     "@devlsh/logger": "^1.1.0",

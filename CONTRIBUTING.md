@@ -35,7 +35,7 @@ Great! We'd love to see it!
 - Add any additional info
   - For example, if this is a new feature, provide your fork with a working example
 
-## Package verification
+## Building
 
 Use temporary pnpm 8.15.9 to preserve the version 6 lockfile. Install dependencies without install lifecycle scripts, then build:
 
@@ -43,16 +43,3 @@ Use temporary pnpm 8.15.9 to preserve the version 6 lockfile. Install dependenci
 pnpm dlx --package=pnpm@8.15.9 pnpm install --frozen-lockfile --ignore-scripts
 pnpm dlx --package=pnpm@8.15.9 pnpm run build
 ```
-
-Verify the real packed package in an isolated consumer with Vue 3.3.8 and TypeScript 5.2.2:
-
-```sh
-pnpm dlx --package=pnpm@8.15.9 pnpm test:package
-```
-
-Open the printed `BROWSER REQUIRED` loopback URL in a real browser. The script records browser results in its printed temporary evidence
-directory and exits nonzero if a check fails or no browser results arrive within ten minutes. The checks cover package metadata, license,
-native entrypoints, strict installed declarations, and the host/client iframe protocol. They do not publish packages.
-
-Keep `@devlsh/logger` on the compatible 1.x API until a separate public API migration is approved. Do not substitute Logger 3.x:
-`Context.logger` exposes the legacy logger, including `useLogger()` and `group(message, context?, collapsed?, level?, prefix?)`.

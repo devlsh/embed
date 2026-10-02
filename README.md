@@ -128,8 +128,11 @@ public `Context.logger` API, including `useLogger()` and the legacy `group(messa
 The compatible Logger 1.1.0 release repairs declaration imports without changing its runtime. Vue `^3.3.8` is a peer dependency;
 `nanoevents` remains a runtime and declaration dependency.
 
+Keep `@devlsh/logger` on the compatible 1.x API until a separate public API migration is approved. Do not substitute Logger 3.x:
+`Context.logger` exposes the legacy logger, including `useLogger()` and `group(message, context?, collapsed?, level?, prefix?)`.
+
 The `main` and `module` fields retain the existing CommonJS and ESM entrypoints. CommonJS loading of the legacy ESM logger is checked on
 Node 24.20.0; older Node versions have not been checked.
 
-For package verification, see [Contributing](CONTRIBUTING.md#package-verification). Original Evil Kiwi authorship and the GPL-3.0-only
-license are preserved. The Discord link above remains the existing community link, not a new devlsh community.
+Original Evil Kiwi authorship and the GPL-3.0-only license are preserved. The Discord link above remains the existing community link, not a
+new devlsh community.
