@@ -1,6 +1,12 @@
 {
+  "editor.wordWrap": "off",
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll": true
-  }
+    "source.fixAll": "always"
+  },
+  "oxc.fmt.configPath": "oxfmt.config.ts",
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  "editor.formatOnSaveMode": "file",
+  "oxc.typeAware": true,
+  "oxc.enable.oxfmt": true
 }

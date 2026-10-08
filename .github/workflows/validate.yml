@@ -1,0 +1,52 @@
+name: "🚦 validate"
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: validate-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    name: "🧪 check"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: "📥 check out repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: "⚙️ set up node and pnpm"
+        id: setup
+        uses: devlsh/tools/github/setup@5a43d10d4535a7cf1368acd9313e70d417ac6235
+
+      - name: "🌍 install playwright"
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: "✅ run checks"
+        run: pnpm check
+
+      - name: "🧪 run tests"
+        run: pnpm test
+
+      - name: "📦 save pnpm caches"
+        if: >-
+          success() && steps.setup.outputs.cache-hit != 'true' &&
+          github.ref == 'refs/heads/main' &&
+          (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ${{ steps.setup.outputs.store }}
+            ${{ steps.setup.outputs.metadata }}
+          key: ${{ steps.setup.outputs.cache-key }}

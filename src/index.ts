@@ -1,13 +1,25 @@
 import { createLogger } from '@devlsh/logger';
 import { createNanoEvents, type DefaultEvents } from 'nanoevents';
-import type { WatchStopHandle } from 'vue';
 
-import { decodeErr, encodeErr, isErr } from '@/errors';
-import { generateId } from '@/helpers';
-import type { AsyncHandler, Context, DefaultEventsMap, Mode, Options, PostObject, Promises, Type } from '@/types';
+import { decodeErr, encodeErr, isErr } from './errors';
+import { generateId } from './utils';
+import {
+  type AsyncRequest,
+  type AsyncResponse,
+  type AsyncHandler,
+  type Context,
+  type DefaultEventsMap,
+  type Mode,
+  type Options,
+  type PostObject,
+  type Promises,
+  type Type,
+} from './types';
 
 const register: Record<string, Context<DefaultEvents & DefaultEventsMap>> = {};
+
 const handlers: Record<string, Record<string, AsyncHandler>> = {};
+
 const promises: Promises = {};
 
 const processMessage = async (e: MessageEvent<PostObject>) => {
@@ -15,17 +27,20 @@ const processMessage = async (e: MessageEvent<PostObject>) => {
     console.log('raw postmessage', e);
   }
 
+  if (!e.data || !e.data.id || !register[e.data.id]) {
+    return;
+  }
+
+  const remote = register[e.data.id].remote ?? '*';
+
   if (
-    !e.data ||
-    !e.data.id ||
-    !register[e.data.id] ||
     /**
      * Check the origin, if one was supplied.
      * Sandboxed iFrames without the `allow-same-origin` permission
      * will return `"null"` as an origin, so in that case we cannot
      * enforce it.
      */
-    ((register[e.data.id].remote ?? '*') !== '*' && e.origin !== 'null' && !e.origin.startsWith(register[e.data.id].remote as string)) ||
+    (remote !== '*' && e.origin !== 'null' && !e.origin.startsWith(remote)) ||
     // If this is the Host, ensure the source is the iFrame Element.
     (register[e.data.id].mode === 'host' && e.source !== register[e.data.id].iframe?.value?.contentWindow)
   ) {
@@ -34,43 +49,50 @@ const processMessage = async (e: MessageEvent<PostObject>) => {
 
   const { id, type, payload } = e.data;
   const { events, post, logger } = register[id];
+  const result: AsyncResponse = payload;
 
   if (type === '_async') {
     // Process incoming async executions.
-    let response: Error | unknown;
+    const request: AsyncRequest = payload;
+    let response: unknown;
 
     try {
-      if (!handlers[id] || !handlers[id][payload.type]) {
-        throw new Error(`no handler for event "${payload.type}"`);
+      if (!handlers[id] || !handlers[id][request.type]) {
+        throw new Error(`no handler for event "${request.type}"`);
       }
 
       logger.debug('processing async request', payload);
-      response = await handlers[id][payload.type](payload.message);
-    } catch (e) {
-      logger.debug('sending error response', payload, e);
-      response = encodeErr(e as Error);
+      response = await handlers[id][request.type](request.message);
+    } catch (error) {
+      logger.debug('sending error response', payload, error);
+      // Preserve legacy .message access for arbitrary rejections, including nullish failures.
+      // oxlint-disable-next-line anti-slop/require-safety-comment-for-type-assertion -- Compatibility exception, not a validated Error invariant.
+      response = encodeErr(error as Error);
     }
 
-    post('_asyncResponse', { id: payload.id, response });
-  } else if (type === '_asyncResponse' && promises[id] && promises[id][payload.id]) {
+    post('_asyncResponse', {
+      id: request.id,
+      response,
+    });
+  } else if (type === '_asyncResponse' && promises[id] && promises[id][result.id]) {
     /**
      * Process the response from async executions.
      * This just means taking the response and resolving/rejecting
      * the stored promise.
      */
-    const promise = promises[id][payload.id];
+    const promise = promises[id][result.id];
 
     window.clearTimeout(promise.timeout);
 
-    logger.debug(`#${payload.id} processing incoming async response`, payload);
+    logger.debug(`#${result.id} processing incoming async response`, payload);
 
-    if (isErr(payload.response)) {
-      promise.reject(decodeErr(payload.response));
+    if (isErr(result.response)) {
+      promise.reject(decodeErr(result.response));
     } else {
-      promise.resolve(payload.response);
+      promise.resolve(result.response);
     }
 
-    delete promises[id][payload.id];
+    delete promises[id][result.id];
   } else {
     // Otherwise it's a regular event, so emit it to any listeners.
     let message = payload;
@@ -84,16 +106,20 @@ const processMessage = async (e: MessageEvent<PostObject>) => {
   }
 };
 
-export function useEmbed<Events extends DefaultEventsMap>(mode: Mode, options: Options) {
+const onMessage = (e: MessageEvent<PostObject>) => {
+  void processMessage(e);
+};
+
+export function useEmbed<Events extends DefaultEventsMap>(mode: Mode, options: Options): Context<Events>;
+export function useEmbed(mode: Mode, options: Options) {
   if (register[options.id]) {
-    return register[options.id] as Context<Events>;
+    return register[options.id];
   }
 
   const logger = createLogger({ name: `embed/${mode}` });
-  const events = createNanoEvents<Events>();
+  const events = createNanoEvents<DefaultEvents & DefaultEventsMap>();
   const isHost = mode === 'host';
   let target: Window | null = window.parent;
-  let watcher: WatchStopHandle | undefined;
 
   if (options.debug !== true) {
     logger.setDisabled(true);
@@ -107,12 +133,12 @@ export function useEmbed<Events extends DefaultEventsMap>(mode: Mode, options: O
     let remote = '*';
 
     try {
-      const origin = target.origin;
+      const { origin } = target;
 
       if (origin && options.remote) {
         remote = options.remote;
       }
-    } catch (e) {
+    } catch {
       // Do nothing.
     }
 
@@ -193,21 +219,17 @@ export function useEmbed<Events extends DefaultEventsMap>(mode: Mode, options: O
   const destroy = () => {
     logger.debug(`destroying ${mode}`);
 
-    if (watcher) {
-      watcher();
-    }
-
     events.events = {};
     delete register[options.id];
     delete promises[options.id];
     delete handlers[options.id];
 
-    if (!Object.keys(register).length) {
-      window.removeEventListener('message', processMessage);
+    if (Object.keys(register).length === 0) {
+      window.removeEventListener('message', onMessage);
     }
   };
 
-  const context: Context<Events> = {
+  const context: Context<DefaultEvents & DefaultEventsMap> = {
     mode,
     post,
     send,
@@ -222,11 +244,11 @@ export function useEmbed<Events extends DefaultEventsMap>(mode: Mode, options: O
   register[options.id] = context;
 
   if (Object.keys(register).length === 1) {
-    window.addEventListener('message', processMessage);
+    window.addEventListener('message', onMessage);
   }
 
   if (isHost) {
-    events.on('_ek-loaded', () => {
+    events.on('_loaded', () => {
       const targetWindow = context.iframe?.value?.contentWindow ?? null;
 
       if (targetWindow) {
@@ -237,12 +259,12 @@ export function useEmbed<Events extends DefaultEventsMap>(mode: Mode, options: O
       }
     });
   } else {
-    post('_ek-loaded');
+    post('_loaded');
   }
 
   logger.debug(`${mode} mode IPC registered`, { options });
 
-  return context as Context<Events>;
+  return context;
 }
 
-export * from './types';
+export type * from './types';

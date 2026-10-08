@@ -1,59 +1,104 @@
 {
+  "$schema": "https://json.schemastore.org/package.json",
   "name": "@devlsh/embed",
   "version": "1.3.0",
-  "description": "Vue 3 Utility Hook for cross-origin iFrame IPC",
-  "files": [
-    "build"
+  "description": "Simple iFrame messaging for Vue.",
+  "keywords": [
+    "async",
+    "communication",
+    "events",
+    "iframe",
+    "messaging",
+    "postmessage",
+    "typescript",
+    "vue"
   ],
-  "main": "./build/index.js",
-  "module": "./build/index.mjs",
-  "types": "./build/index.d.ts",
-  "license": "GPL-3.0-only",
-  "author": {
-    "name": "Evil Kiwi Limited",
-    "url": "https://evil.kiwi",
-    "email": "support@evil.kiwi"
-  },
-  "homepage": "https://github.com/devlsh/embed",
+  "homepage": "https://github.com/devlsh/embed#readme",
   "bugs": {
     "url": "https://github.com/devlsh/embed/issues"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "devlsh",
+    "email": "contact@devlsh.com"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/devlsh/embed.git"
   },
-  "keywords": [
-    "typescript",
-    "vue",
-    "iframe",
-    "hook"
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/devlsh"
+  },
+  "files": [
+    "dist",
+    "LICENSE"
   ],
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs"
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
-    "clean": "rimraf build",
-    "prepack": "pnpm run build",
-    "build": "pnpm run clean && pnpm run compile",
-    "compile": "vite build",
-    "dev": "vite build --watch"
+    "build": "tsdown",
+    "check": "pnpm typecheck && pnpm lint && pnpm fmt:check",
+    "demo": "pnpm --filter embed-demo",
+    "fix:all": "pnpm lint:fix && pnpm fmt",
+    "fmt": "oxfmt",
+    "fmt:check": "oxfmt --check",
+    "lint": "oxlint --deny-warnings",
+    "lint:fix": "oxlint --deny-warnings --fix",
+    "prepack": "pnpm build",
+    "prepare": "lefthook install --force",
+    "test": "pnpm run test:setup && vitest run",
+    "test:coverage": "pnpm run test:setup && vitest run --coverage",
+    "test:setup": "playwright install chromium",
+    "test:watch": "pnpm run test:setup && vitest watch",
+    "typecheck": "tsc -p tsconfig.build.json --noEmit && tsc -p tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@devlsh/logger": "^1.1.0",
-    "nanoevents": "^8.0.0"
-  },
-  "peerDependencies": {
-    "vue": "^3.3.8"
+    "nanoevents": "10.0.0"
   },
   "devDependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.1.1",
-    "@vitejs/plugin-vue": "^4.4.1",
-    "@vue/compiler-sfc": "^3.3.8",
-    "prettier": "^3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.7",
-    "rimraf": "^5.0.5",
-    "terser": "^5.24.0",
-    "tslib": "^2.6.2",
-    "typescript": "^5.2.2",
-    "vite": "^4.5.0",
-    "vite-plugin-dts": "^3.6.3",
-    "vue": "^3.3.8"
+    "@devlsh/logger": "3.0.1",
+    "@devlsh/tools": "1.1.0",
+    "@oxlint/plugins": "1.86.0",
+    "@stylistic/eslint-plugin": "5.10.0",
+    "@tsconfig/node24": "24.0.5",
+    "@types/node": "24.19.0",
+    "@vitejs/plugin-vue": "6.0.9",
+    "@vitest/browser-playwright": "5.0.3",
+    "@vitest/coverage-v8": "5.0.3",
+    "lefthook": "2.1.14",
+    "oxfmt": "0.71.0",
+    "oxlint": "1.86.0",
+    "oxlint-tsgolint": "7.0.2003",
+    "playwright": "1.63.0",
+    "tsdown": "0.23.0",
+    "typescript": "7.0.2",
+    "vitest": "5.0.3",
+    "vitest-browser-vue": "3.1.0",
+    "vue": "3.5.43"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "11.27.0",
+      "onFail": "error"
+    },
+    "runtime": {
+      "name": "node",
+      "version": "24.21.0",
+      "onFail": "error"
+    }
   }
 }

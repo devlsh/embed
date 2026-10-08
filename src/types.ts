@@ -1,16 +1,29 @@
-import type { Logger } from '@devlsh/logger';
-import type { Emitter, EventsMap } from 'nanoevents';
-import type { Ref } from 'vue';
+import { type Logger } from '@devlsh/logger';
+import { type Emitter, type EventsMap } from 'nanoevents';
+import { type Ref } from 'vue';
 
 export type Frame = Ref<InstanceType<typeof HTMLIFrameElement> | undefined>;
+
 export type Type = string;
+
 export type Mode = 'host' | 'client';
 
-export type AsyncHandler<P = any> = (payload: P) => Promise<unknown>;
+export type AsyncHandler<P = any, R = unknown> = (payload: P) => Promise<R>;
 
 export type DefaultEventsMap = EventsMap & {
-  '_ek-loaded': () => void;
+  _loaded: () => void;
 };
+
+export interface AsyncRequest {
+  id: number;
+  type: Type;
+  message: unknown;
+}
+
+export interface AsyncResponse {
+  id: number;
+  response: unknown;
+}
 
 export interface Context<Events extends DefaultEventsMap> {
   logger: Logger;

@@ -1,0 +1,93 @@
+:root {
+  font-family: system-ui, sans-serif;
+  color: #263238;
+  background: #fff;
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+#app {
+  height: 100%;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 1.75rem;
+  line-height: 1.2;
+  margin-block: 0 16px;
+}
+
+p {
+  margin-block: 0 16px;
+  overflow-wrap: anywhere;
+}
+
+button {
+  padding: 8px 12px;
+  margin-inline-end: 6px;
+  margin-block-end: 6px;
+  border: 1px solid #b8c1c5;
+  border-radius: 4px;
+  background: #f5f7f8;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+  background: #e8edef;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+.parent {
+  display: flex;
+  gap: 20px;
+  height: 100%;
+}
+
+.col {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-width: 0;
+}
+
+.button {
+  margin-block-end: 14px;
+}
+
+iframe {
+  flex: 1;
+  width: 100%;
+  min-height: 300px;
+  border: 1px solid #b8c1c5;
+  border-radius: 4px;
+}
+
+.col > p:last-child {
+  margin-block: 16px 0;
+}
+
+@media (max-width: 600px) {
+  .parent {
+    flex-direction: column;
+    height: auto;
+  }
+
+  .col {
+    min-height: 600px;
+  }
+}

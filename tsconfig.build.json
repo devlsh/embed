@@ -3,12 +3,12 @@
   "extends": "@tsconfig/node24/tsconfig.json",
   "compilerOptions": {
     "lib": ["es2024", "esnext.array", "esnext.collection", "esnext.error", "esnext.iterator", "esnext.promise", "dom"],
+    "declaration": true,
     "module": "esnext",
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
-    "noEmit": true,
-    "rootDir": ".",
-    "types": ["node", "vitest/globals", "vitest-browser-vue"]
+    "rewriteRelativeImportExtensions": true,
+    "outDir": "dist",
+    "rootDir": "src"
   },
-  "include": ["src", "tests", "*.config.ts", "shim.d.ts"]
+  "include": ["src"]
 }

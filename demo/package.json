@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "@devlsh/embed-demo",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "vite build",
+    "dev": "vite",
+    "typecheck": "vue-tsc -p tsconfig.json --noEmit && tsc -p tsconfig.build.json --noEmit",
+    "wrangler": "wrangler"
+  },
+  "devDependencies": {
+    "@tsconfig/node24": "24.0.5",
+    "@types/node": "24.19.0",
+    "@vitejs/plugin-vue": "6.0.9",
+    "typescript": "6.0.3",
+    "vite": "8.3.2",
+    "vue": "3.5.43",
+    "vue-tsc": "3.3.12",
+    "wrangler": "4.147.0"
+  }
+}

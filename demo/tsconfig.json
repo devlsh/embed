@@ -1,0 +1,17 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    "strict": true,
+    "target": "esnext",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "skipLibCheck": true,
+    "isolatedModules": true,
+    "types": ["vite/client"],
+    "lib": ["es2023", "dom", "dom.iterable", "esnext.array", "esnext.collection", "esnext.iterator"]
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue"],
+  "vueCompilerOptions": {
+    "strictTemplates": true
+  }
+}

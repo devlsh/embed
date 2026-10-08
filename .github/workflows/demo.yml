@@ -1,0 +1,87 @@
+name: "🧭 demo"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      deploy:
+        description: "Deploy"
+        type: boolean
+        default: false
+        required: true
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    name: "✅ validate demo"
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+
+    steps:
+      - name: "📥 check out repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: "⚙️ set up node and pnpm"
+        uses: devlsh/tools/github/setup@5a43d10d4535a7cf1368acd9313e70d417ac6235
+
+      - name: "🌍 install playwright"
+        run: pnpm exec playwright install --with-deps chromium
+
+      - name: "✅ run checks"
+        run: pnpm check
+
+      - name: "🧪 run tests"
+        run: pnpm test
+
+      - name: "✅ typecheck demo"
+        run: pnpm demo typecheck
+
+      - name: "📦 build demo"
+        run: pnpm demo build
+
+      - name: "✅ validate deployment packaging"
+        run: pnpm demo wrangler deploy --dry-run
+
+  deploy:
+    name: "🚀 deploy demo"
+    needs: validate
+    if: >-
+      github.ref == 'refs/heads/main' &&
+      (github.event_name == 'push' ||
+      (github.event_name == 'workflow_dispatch' && inputs.deploy))
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: https://embed.devlsh.com
+    concurrency:
+      group: embed-demo
+      cancel-in-progress: false
+
+    steps:
+      - name: "📥 check out repository"
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: "⚙️ set up node and pnpm"
+        uses: devlsh/tools/github/setup@5a43d10d4535a7cf1368acd9313e70d417ac6235
+
+      - name: "📦 build demo"
+        run: pnpm demo build
+
+      - name: "🚀 deploy validated assets"
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          workingDirectory: demo
+          packageManager: pnpm
+          command: deploy --strict
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}

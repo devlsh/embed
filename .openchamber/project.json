@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "plansDir": "docs/plans",
+  "setupWorktreeWait": true,
+  "setupWorktree": [
+    "git config --local core.hooksPath \"$ROOT_PROJECT_PATH/.git/hooks\"",
+    "direnv allow",
+    "devenv tasks run embed:install"
+  ]
+}

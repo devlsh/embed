@@ -1,2 +1,14 @@
+verifyDepsBeforeRun: error
+runtimeOnFail: error
+pmOnFail: error
+
 packages:
-  - example/**
+  - demo
+
+allowBuilds:
+  esbuild: true
+  lefthook: true
+  workerd: true
+
+minimumReleaseAgeExclude:
+  - '@devlsh/tools@1.1.0'

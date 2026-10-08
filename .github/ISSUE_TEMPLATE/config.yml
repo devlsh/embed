@@ -1,0 +1,10 @@
+blank_issues_enabled: false
+
+contact_links:
+  - name: Questions and Support
+    url: https://github.com/devlsh/embed/discussions
+    about: Ask questions in Discussions.
+
+  - name: Security Policy
+    url: https://github.com/devlsh/embed/blob/main/SECURITY.md
+    about: Read the vulnerability reporting policy.
