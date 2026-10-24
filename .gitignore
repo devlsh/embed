@@ -46,6 +46,7 @@ dist/
 # local agent workflow artifacts.
 .worktrees/
 .scratch/
+/docs/research
 /research
 /docs/plans
 /plans

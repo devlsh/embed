@@ -27,8 +27,7 @@ jobs:
           persist-credentials: false
 
       - name: "⚙️ set up node and pnpm"
-        id: setup
-        uses: devlsh/tools/github/setup@5a43d10d4535a7cf1368acd9313e70d417ac6235
+        uses: devlsh/tools/github/setup@bf3f55e1475d89a786af188a3af49689be002cab
 
       - name: "🌍 install playwright"
         run: pnpm exec playwright install --with-deps chromium
@@ -38,15 +37,3 @@ jobs:
 
       - name: "🧪 run tests"
         run: pnpm test
-
-      - name: "📦 save pnpm caches"
-        if: >-
-          success() && steps.setup.outputs.cache-hit != 'true' &&
-          github.ref == 'refs/heads/main' &&
-          (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
-        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
-        with:
-          path: |
-            ${{ steps.setup.outputs.store }}
-            ${{ steps.setup.outputs.metadata }}
-          key: ${{ steps.setup.outputs.cache-key }}

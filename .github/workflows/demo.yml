@@ -29,7 +29,7 @@ jobs:
           persist-credentials: false
 
       - name: "⚙️ set up node and pnpm"
-        uses: devlsh/tools/github/setup@5a43d10d4535a7cf1368acd9313e70d417ac6235
+        uses: devlsh/tools/github/setup@bf3f55e1475d89a786af188a3af49689be002cab
 
       - name: "🌍 install playwright"
         run: pnpm exec playwright install --with-deps chromium
@@ -72,7 +72,7 @@ jobs:
           persist-credentials: false
 
       - name: "⚙️ set up node and pnpm"
-        uses: devlsh/tools/github/setup@5a43d10d4535a7cf1368acd9313e70d417ac6235
+        uses: devlsh/tools/github/setup@bf3f55e1475d89a786af188a3af49689be002cab
 
       - name: "📦 build demo"
         run: pnpm demo build

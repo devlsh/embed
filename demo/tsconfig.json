@@ -10,8 +10,5 @@
     "types": ["vite/client"],
     "lib": ["es2023", "dom", "dom.iterable", "esnext.array", "esnext.collection", "esnext.iterator"]
   },
-  "include": ["src/**/*.ts", "src/**/*.vue"],
-  "vueCompilerOptions": {
-    "strictTemplates": true
-  }
+  "include": ["src/**/*.ts", "../shim.d.ts"]
 }

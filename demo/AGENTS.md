@@ -15,7 +15,7 @@ Update these instructions and [README.md](README.md) when owners, commands, or i
 
 Use [CONTRIBUTING](../CONTRIBUTING.md#checks) for setup and static demo checks. Include these checks for affected behavior:
 
-- For compiler changes, verify valid SFCs and library imports pass through `pnpm demo typecheck`. Verify invalid scripts, templates, and component props fail. Do not replace SFC checks with `tsc` and a Vue shim.
+- For compiler changes, verify valid standalone TypeScript and library imports pass through `pnpm demo typecheck`, and invalid TypeScript fails. The browser check uses the shared [Vue shim](../shim.d.ts); it does not check SFC scripts, templates, or component props. The demo build compiles SFCs but does not prove their type safety.
 - From the repository root, run `pnpm demo dev` for real-interface checks. Verify default/query selection, isolated channels, sync integers, the five-second async payload/countdown/result, error rejection, and parent tips. Inspect pending-control recovery, the two-column layout, viewport changes, and timer/context cleanup on unmount and HMR as affected.
 
 Library checks and a successful demo build do not prove browser behavior. Report actual commands, outcomes, and coverage gaps. Local checks do not verify DNS, custom-domain ownership, secrets, or hosted environment protection.

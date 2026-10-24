@@ -10,21 +10,15 @@ Search open and closed issues first. Add details to a report, or open a new one 
 
 ## Local Development
 
-Install [Nix](https://nix.dev/) and [devenv](https://devenv.sh/), then clone the repository.
+Install [pnpm 12](https://pnpm.io/installation), then clone the repository.
 
 From the repository root, install dependencies with the frozen lockfile and set up Git hooks:
 
 ```sh
-devenv tasks run embed:install
+pnpm install --frozen-lockfile
 ```
 
-Enter the development shell before you run the pnpm commands below:
-
-```sh
-devenv shell
-```
-
-If you use [direnv](https://direnv.net/), run `direnv allow .` instead of manual shell activation.
+`package.json#devEngines` selects the pnpm and Node versions.
 
 ## Dependency Changes
 
@@ -75,7 +69,7 @@ After the demo build, validate deployment packaging without live deployment:
 pnpm demo wrangler deploy --dry-run
 ```
 
-Demo typechecks use `vue-tsc` for SFCs and browser TypeScript, then `tsc` for Vite configuration. Preserve the [demo-local compiler pair](demo/package.json) and [strict template checks](demo/tsconfig.json).
+Demo typechecks use `tsc` for standalone browser TypeScript and Vite configuration. The [browser configuration](demo/tsconfig.json) uses the shared [Vue shim](shim.d.ts); it does not check SFC scripts, templates, or component props. Keep the [demo TypeScript version](demo/package.json) aligned with the root. The demo build compiles SFCs but does not prove their type safety.
 
 Read the [demo guide](demo/README.md) for controls. Library checks do not replace demo checks.
 
