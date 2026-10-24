@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.0.1](https://github.com/devlsh/embed/compare/v2.0.0...v2.0.1) (2026-10-24)
+
+
+### Miscellaneous Chores
+
+* modernize tooling, dependencies, and agent guidance ([925dd8b](https://github.com/devlsh/embed/commit/925dd8bdfef83787c6aead51def5816b67f16d22))
+
 ## [2.0.0](https://github.com/devlsh/embed/compare/v1.3.0...v2.0.0) (2026-10-08)
 
 
